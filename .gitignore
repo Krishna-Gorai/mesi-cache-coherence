@@ -1,0 +1,21 @@
+# Vivado / xsim simulation artifacts
+xsim.dir/
+.Xil/
+*.jou
+*.log
+*.pb
+*.wdb
+*.vcd
+*.str
+webtalk*.xml
+webtalk*.html
+xvlog.pb
+xelab.pb
+xsim.log
+xvlog.log
+xelab.log
+
+# OS / editor cruft
+Thumbs.db
+.DS_Store
+*.swp
