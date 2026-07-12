@@ -20,6 +20,11 @@ package mesi_pkg;
 
   localparam int NUM_CORES   = 4;                     // used from M1 onward
 
+  // Core-id width for an N-core system (>=1 bit even for a single core).
+  function automatic int IDW(input int n);
+    return (n <= 1) ? 1 : $clog2(n);
+  endfunction
+
   // ---- MESI stable states ---------------------------------------------------
   typedef enum logic [1:0] {
     I = 2'b00,   // Invalid

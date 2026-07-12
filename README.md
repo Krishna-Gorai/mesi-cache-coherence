@@ -43,10 +43,20 @@ where most real coherence bugs hide.
 | Milestone | Content | Status |
 |-----------|---------|--------|
 | **M0** | Repo scaffold + single L1 (CPU side), write-back/write-allocate, self-checking sanity test | done |
-| **M1** | Snoop bus + arbiter, 2 caches, stable MESI transitions | planned |
+| **M1** | Snoop bus + round-robin arbiter, 2 caches, stable MESI transitions, self-checking state+data test | done |
 | **M2** | Transient states + races (concurrent upgrades, snoop-hit on in-flight line) | planned |
 | **M3** | Scale to 4 cores + bus-monitor invariant checker + randomized stress | planned |
 | **M4** | FPGA synthesis (ZCU104) PPA + protocol state diagram & waveforms | planned |
+
+### M1 design notes
+
+The bus is **atomic** (one coherence transaction at a time) and acts as the
+coherence point: it arbitrates (round-robin), broadcasts the request to the
+other caches, gathers their snoop response, flushes a dirty owner to memory when
+needed, performs the fill/writeback, then commits. A wired-OR **shared** signal
+picks E vs S on a read miss. Data currently migrates through memory (a dirty
+snooper flushes, the requester then reads); direct cache-to-cache forwarding and
+overlapping transactions with transient states arrive in M2.
 
 ## Repository layout
 
@@ -57,16 +67,16 @@ sim/    simulation run scripts
 docs/   protocol diagrams and notes
 ```
 
-## Running the M0 test (Vivado xsim)
+## Running the tests (Vivado xsim)
 
-With the Vivado `bin` directory on `PATH`:
+With the Vivado `bin` directory on `PATH`, from the project root:
 
 ```
-sim\run_m0.bat
+sim\run_m1.bat
 ```
 
 Expected tail of the log:
 
 ```
-==== M0 TEST PASSED ====
+==== M1 TEST PASSED ====
 ```
