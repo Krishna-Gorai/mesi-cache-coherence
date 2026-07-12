@@ -44,7 +44,7 @@ where most real coherence bugs hide.
 |-----------|---------|--------|
 | **M0** | Repo scaffold + single L1 (CPU side), write-back/write-allocate, self-checking sanity test | done |
 | **M1** | Snoop bus + round-robin arbiter, 2 caches, stable MESI transitions, self-checking state+data test | done |
-| **M2** | Transient states + races (concurrent upgrades, snoop-hit on in-flight line) | planned |
+| **M2** | Concurrent-request race resolution + continuous coherence-invariant checker | done |
 | **M3** | Scale to 4 cores + bus-monitor invariant checker + randomized stress | planned |
 | **M4** | FPGA synthesis (ZCU104) PPA + protocol state diagram & waveforms | planned |
 
@@ -57,6 +57,25 @@ needed, performs the fill/writeback, then commits. A wired-OR **shared** signal
 picks E vs S on a read miss. Data currently migrates through memory (a dirty
 snooper flushes, the requester then reads); direct cache-to-cache forwarding and
 overlapping transactions with transient states arrive in M2.
+
+### M2 design notes
+
+The bus stays atomic, but caches may now issue requests **simultaneously**,
+which exposes the real coherence races:
+
+* **Concurrent conflicting upgrade** — two cores in S both want M. The arbiter
+  grants one `BusUpgr`, which invalidates the other *while it is mid-upgrade*.
+  The loser detects that its shared copy is gone and converts its `BusUpgr`
+  into a full `BusRdX` to re-acquire the line with ownership, rather than
+  silently (and incorrectly) promoting a stale copy to M.
+* **Snoop-vs-lookup** — if a snoop commits a change to the exact line the CPU
+  side is examining that cycle, the lookup decision is deferred one cycle and
+  remade against the updated state.
+
+Correctness is checked two ways: deterministic per-scenario state/data asserts,
+and a **continuous invariant checker** that peeks both caches every cycle and
+flags any line resident in two cores in a state other than Shared/Shared
+(catches any single-writer or exclusivity violation). Run `sim\run_m2.bat`.
 
 ## Repository layout
 

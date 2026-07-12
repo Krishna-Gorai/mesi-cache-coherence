@@ -21,9 +21,17 @@
 //   see BusRdX : M/E/S -> I   (M also flushes)
 //   see BusUpgr:     S -> I
 //
-// M1 simplifications (lifted in M2): atomic bus, no cache-to-cache forwarding,
-// and the testbench serializes accesses so a core never runs a local access
-// while another core's transaction is live on the same line.
+// M2 adds race handling for concurrent requests (the bus is still atomic, but
+// caches may now request simultaneously):
+//   * Upgrade race -- a cache in S heading for M (ST_UPGR) that is invalidated
+//     by another core before it wins the bus must abandon the BusUpgr and
+//     re-acquire the line with a full BusRdX (its cached data is now stale).
+//   * Snoop-vs-lookup race -- if a snoop commit changes the line the CPU FSM is
+//     examining this cycle (ST_LOOKUP), the decision is deferred one cycle so it
+//     is remade against the updated state instead of a stale one.
+//
+// Still simplified (lifted later): atomic bus (one transaction end-to-end at a
+// time) and data migration through memory rather than direct cache-to-cache.
 // -----------------------------------------------------------------------------
 `timescale 1ns/1ps
 
@@ -80,6 +88,8 @@ module l1_cache
   wire                  hit          = (state_q[idx] != I) && (tag_q[idx] == tag);
   wire                  victim_dirty = (state_q[idx] == M);          // occupant is dirty
   wire [ADDR_WIDTH-1:0] victim_addr  = {tag_q[idx], idx, {BYTE_OFFSET{1'b0}}};
+  // Still hold the requested line in Shared? (false => the upgrade lost its copy)
+  wire                  have_shared  = (state_q[idx] == S) && (tag_q[idx] == tag);
 
   // ---- Snoop lookup (combinational, always live) ----
   wire [INDEX_BITS-1:0] s_idx     = addr_index(s_addr);
@@ -91,6 +101,10 @@ module l1_cache
   assign s_hit   = snoop_act;
   assign s_dirty = snoop_act && (state_q[s_idx] == M);
   assign s_data  = data_q[s_idx];
+
+  // A snoop is committing a change to the very line this cache's CPU FSM is
+  // currently examining (same set, and it is really that line, not a victim).
+  wire snoop_conflict = s_commit && !is_me && s_present && (s_idx == idx);
 
   // ---- Processor-side FSM ----
   typedef enum logic [2:0] {
@@ -114,7 +128,7 @@ module l1_cache
     unique case (cs)
       ST_WB:   begin m_req = 1'b1; m_cmd = BUS_WB;                       m_addr = victim_addr; m_wdata = data_q[idx]; end
       ST_FILL: begin m_req = 1'b1; m_cmd = req_we_q ? BUS_RDX : BUS_RD;  m_addr = req_addr_q;  end
-      ST_UPGR: begin m_req = 1'b1; m_cmd = BUS_UPGR;                     m_addr = req_addr_q;  end
+      ST_UPGR: begin m_req = 1'b1; m_cmd = have_shared ? BUS_UPGR : BUS_RDX; m_addr = req_addr_q; end
       default: ;
     endcase
   end
@@ -143,7 +157,10 @@ module l1_cache
         end
 
         ST_LOOKUP: begin
-          if (hit) begin
+          if (snoop_conflict) begin
+            // A snoop is rewriting this line under us right now; hold in
+            // ST_LOOKUP and remake the decision next cycle against fresh state.
+          end else if (hit) begin
             if (!req_we_q) begin                       // read hit
               cpu_resp_rdata <= data_q[idx];
               cpu_resp_valid <= 1'b1;
@@ -196,7 +213,15 @@ module l1_cache
         end
 
         ST_UPGR: begin
-          if (m_done) begin
+          if (!have_shared) begin
+            // Lost the shared copy to another core before winning the bus:
+            // the BusUpgr shortcut is invalid, re-acquire the line via BusRdX.
+            // synthesis translate_off
+            $display("[%0t] core%0d: upgrade race -- lost the line, BusUpgr -> BusRdX @%08h",
+                     $time, CORE_ID, req_addr_q);
+            // synthesis translate_on
+            cs <= ST_FILL;
+          end else if (m_done) begin
             data_q[idx]    <= req_wdata_q;             // S -> M after invalidating sharers
             state_q[idx]   <= M;
             cpu_resp_rdata <= req_wdata_q;
