@@ -25,6 +25,9 @@ vivado*.log
 vivado*.jou
 .Xil/
 
+# Generated Vivado project (rebuild with sim\create_vivado_project.tcl)
+vivado_prj/
+
 # OS / editor cruft
 Thumbs.db
 .DS_Store

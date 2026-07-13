@@ -145,10 +145,13 @@ in-context implementation would refine it. Run all functional tests with
 ## Repository layout
 
 ```
-rtl/    synthesizable SystemVerilog (package, memory model, L1 cache)
-tb/     testbenches
-sim/    simulation run scripts
-docs/   protocol diagrams and notes
+rtl/            synthesizable SystemVerilog (package, memory model, L1 cache,
+                snoop bus, coherent system, coherence-unit synth wrapper) +
+                bus_monitor (verification-only, synthesis-excluded)
+tb/             testbenches (directed, race, 4-core stress, lifecycle trace)
+sim/            run scripts, OOC synthesis, Vivado project generator
+docs/           protocol reference + annotated waveforms
+reports_synth/  ZCU104 utilization / timing / power reports
 ```
 
 ## Running the tests (Vivado xsim)
@@ -156,11 +159,37 @@ docs/   protocol diagrams and notes
 With the Vivado `bin` directory on `PATH`, from the project root:
 
 ```
-sim\run_m1.bat
+sim\run_m1.bat        directed stable-transition regression
+sim\run_m2.bat        + concurrent-request races
+sim\run_m3.bat        4-core randomized stress under the bus monitor
+sim\run_m4_trace.bat  annotated MESI lifecycle trace (+ trace.vcd)
 ```
 
-Expected tail of the log:
+Expected tail of, e.g., the M3 log:
 
 ```
-==== M1 TEST PASSED ====
+==== M3 STRESS TEST PASSED ====
 ```
+
+## Exploring in the Vivado GUI
+
+To browse the design as a schematic and watch the waveforms interactively,
+generate a Vivado project (targets the ZCU104, `xczu7ev`):
+
+```
+sim\create_vivado_project.bat
+```
+
+Then open `vivado_prj\mesi_coherence.xpr` and:
+
+* **See the design** — *Flow Navigator → RTL Analysis → Open Elaborated Design*
+  shows the schematic of `coherent_system` (four caches, the snoop bus and
+  memory). Cross-probe modules from the *Sources* pane.
+* **See the waveforms** — *Flow Navigator → Simulation → Run Simulation → Run
+  Behavioral Simulation* elaborates and opens the waveform viewer. It defaults
+  to `tb_trace` (the short lifecycle walk); to run a different testbench,
+  right-click one under *Sources → Simulation Sources* and *Set as Top*. Add any
+  internal signal to the wave window (e.g. `dut/g_core[0]/u_cache/state_q`).
+
+The generated `vivado_prj/` directory is disposable and git-ignored — re-run the
+script anytime to rebuild it.
