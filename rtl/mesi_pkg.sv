@@ -25,6 +25,12 @@ package mesi_pkg;
     return (n <= 1) ? 1 : $clog2(n);
   endfunction
 
+  // Deterministic initial memory contents, shared by the memory model and the
+  // monitor's golden model so untouched locations agree.
+  function automatic logic [DATA_WIDTH-1:0] init_word(input int i);
+    return 32'hDEAD_0000 + i;
+  endfunction
+
   // ---- MESI stable states ---------------------------------------------------
   typedef enum logic [1:0] {
     I = 2'b00,   // Invalid

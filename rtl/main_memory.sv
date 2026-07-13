@@ -28,6 +28,8 @@ module main_memory
 
   logic [DATA_WIDTH-1:0] mem [0:MEM_WORDS-1];
 
+  initial for (int i = 0; i < MEM_WORDS; i++) mem[i] = init_word(i);
+
   function automatic logic [AW-1:0] word_addr(input logic [ADDR_WIDTH-1:0] a);
     return a[BYTE_OFFSET +: AW];
   endfunction

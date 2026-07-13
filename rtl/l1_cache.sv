@@ -26,9 +26,12 @@
 //   * Upgrade race -- a cache in S heading for M (ST_UPGR) that is invalidated
 //     by another core before it wins the bus must abandon the BusUpgr and
 //     re-acquire the line with a full BusRdX (its cached data is now stale).
-//   * Snoop-vs-lookup race -- if a snoop commit changes the line the CPU FSM is
-//     examining this cycle (ST_LOOKUP), the decision is deferred one cycle so it
-//     is remade against the updated state instead of a stale one.
+//   * Snoop-vs-lookup race -- while another core's bus transaction is in flight
+//     on the line the CPU FSM is examining (ST_LOOKUP), the decision is held
+//     until that transaction commits and then remade against the updated state.
+//     Covering the whole in-flight window (not just the commit cycle) stops a
+//     local write-hit from silently mutating a line mid-flush, which would let
+//     this cache's copy diverge in value from the copy it handed to the bus.
 //
 // Still simplified (lifted later): atomic bus (one transaction end-to-end at a
 // time) and data migration through memory rather than direct cache-to-cache.
@@ -70,7 +73,11 @@ module l1_cache
   input  logic                    s_commit,
   output logic                    s_hit,
   output logic                    s_dirty,
-  output logic [DATA_WIDTH-1:0]   s_data
+  output logic [DATA_WIDTH-1:0]   s_data,
+
+  // ---- Debug observation (for the coherence monitor; not a functional port) ----
+  output mesi_e                   dbg_state [NUM_SETS],
+  output logic [TAG_BITS-1:0]     dbg_tag   [NUM_SETS]
 );
 
   // ---- Cache arrays ----
@@ -102,9 +109,22 @@ module l1_cache
   assign s_dirty = snoop_act && (state_q[s_idx] == M);
   assign s_data  = data_q[s_idx];
 
-  // A snoop is committing a change to the very line this cache's CPU FSM is
-  // currently examining (same set, and it is really that line, not a victim).
-  wire snoop_conflict = s_commit && !is_me && s_present && (s_idx == idx);
+  for (genvar gs = 0; gs < NUM_SETS; gs++) begin : g_dbg
+    assign dbg_state[gs] = state_q[gs];
+    assign dbg_tag[gs]   = tag_q[gs];
+  end
+
+  // Another core's bus transaction is IN FLIGHT on the very line this cache's
+  // CPU FSM is examining (same set + tag). It stays asserted for the whole
+  // transaction (s_valid spans BUS_EVAL..BUS_COMMIT), not just the commit
+  // cycle, so a local write-hit cannot silently mutate the line while it is
+  // being flushed/handed to another core -- doing so would let this cache's
+  // post-transaction copy diverge from what it flushed (a value-incoherence
+  // that leaves every cache in a legal MESI state yet holding different data).
+  // Holding in ST_LOOKUP until the transaction commits forces the decision to
+  // be remade against the post-snoop state (e.g. a write that thought it was a
+  // silent M/E hit correctly falls back to BusUpgr/BusRdX from S/I).
+  wire snoop_conflict = s_valid && !is_me && s_present && (s_idx == idx);
 
   // ---- Processor-side FSM ----
   typedef enum logic [2:0] {
@@ -158,8 +178,9 @@ module l1_cache
 
         ST_LOOKUP: begin
           if (snoop_conflict) begin
-            // A snoop is rewriting this line under us right now; hold in
-            // ST_LOOKUP and remake the decision next cycle against fresh state.
+            // Another core owns this line on the bus right now; hold in
+            // ST_LOOKUP until its transaction commits, then remake the decision
+            // against the post-snoop state.
           end else if (hit) begin
             if (!req_we_q) begin                       // read hit
               cpu_resp_rdata <= data_q[idx];

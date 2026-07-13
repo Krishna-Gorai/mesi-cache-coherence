@@ -14,6 +14,9 @@ xelab.pb
 xsim.log
 xvlog.log
 xelab.log
+xsim*.backup.jou
+xsim*.backup.log
+dfx_runtime.txt
 
 # OS / editor cruft
 Thumbs.db

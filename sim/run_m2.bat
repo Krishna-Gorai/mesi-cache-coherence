@@ -9,7 +9,7 @@ setlocal
 cd /d "%~dp0\.."
 
 call xvlog -sv rtl\mesi_pkg.sv rtl\main_memory.sv rtl\l1_cache.sv ^
-                rtl\snoop_bus.sv rtl\coherent_system.sv ^
+                rtl\snoop_bus.sv rtl\bus_monitor.sv rtl\coherent_system.sv ^
                 tb\tb_coherent_system.sv tb\tb_race.sv || exit /b 1
 
 echo ===== regression: tb_coherent_system =====

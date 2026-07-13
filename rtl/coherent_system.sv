@@ -51,6 +51,10 @@ module coherent_system
   logic                  mem_resp_valid;
   logic [DATA_WIDTH-1:0] mem_resp_rdata;
 
+  // ---- Cache state, collected for the coherence monitor ----
+  mesi_e               all_state [N][NUM_SETS];
+  logic [TAG_BITS-1:0] all_tag   [N][NUM_SETS];
+
   genvar i;
   generate
     for (i = 0; i < N; i++) begin : g_core
@@ -73,7 +77,9 @@ module coherent_system
         .s_valid, .s_cmd, .s_addr, .s_from, .s_commit,
         .s_hit   (s_hit[i]),
         .s_dirty (s_dirty[i]),
-        .s_data  (s_data[i])
+        .s_data  (s_data[i]),
+        .dbg_state(all_state[i]),
+        .dbg_tag  (all_tag[i])
       );
     end
   endgenerate
@@ -92,5 +98,14 @@ module coherent_system
     .req_addr  (mem_req_addr),  .req_wdata(mem_req_wdata),
     .resp_valid(mem_resp_valid),.resp_rdata(mem_resp_rdata)
   );
+
+  // synthesis translate_off
+  bus_monitor #(.N(N), .MEM_WORDS(MEM_WORDS)) u_mon (
+    .clk, .rst_n,
+    .mon_state(all_state), .mon_tag(all_tag),
+    .cpu_req_valid, .cpu_req_ready, .cpu_req_we, .cpu_req_addr, .cpu_req_wdata,
+    .cpu_resp_valid, .cpu_resp_rdata
+  );
+  // synthesis translate_on
 
 endmodule
