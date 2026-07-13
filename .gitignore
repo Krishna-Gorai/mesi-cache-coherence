@@ -18,6 +18,13 @@ xsim*.backup.jou
 xsim*.backup.log
 dfx_runtime.txt
 
+# Vivado synthesis byproducts (keep the text PPA reports, drop the rest)
+*.dcp
+reports_synth*.log
+vivado*.log
+vivado*.jou
+.Xil/
+
 # OS / editor cruft
 Thumbs.db
 .DS_Store

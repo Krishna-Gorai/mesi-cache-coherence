@@ -46,7 +46,7 @@ where most real coherence bugs hide.
 | **M1** | Snoop bus + round-robin arbiter, 2 caches, stable MESI transitions, self-checking state+data test | done |
 | **M2** | Concurrent-request race resolution + continuous coherence-invariant checker | done |
 | **M3** | Scale to 4 cores + standalone bus monitor (invariant + data-value scoreboard) + randomized stress | done |
-| **M4** | FPGA synthesis (ZCU104) PPA + protocol state diagram & waveforms | planned |
+| **M4** | FPGA synthesis (ZCU104) PPA + protocol state diagram & annotated waveforms | done |
 
 ### M1 design notes
 
@@ -111,6 +111,36 @@ the newer value locally. The fix holds a CPU lookup in place for the **whole**
 in-flight snoop window on that line (not just the commit cycle), so the write is
 remade against the post-transaction state and correctly takes the `BusUpgr` /
 `BusRdX` path. Run `sim\run_m3.bat`.
+
+### M4: synthesis PPA, protocol diagram, waveforms
+
+**Protocol and waveforms.** [`docs/protocol.md`](docs/protocol.md) is the full
+MESI specification — state/command tables and Mermaid state diagrams for the
+processor side, the snoop side, and the atomic bus sequencer, each matching the
+RTL. [`docs/waveforms.md`](docs/waveforms.md) is an annotated trace
+(`tb/tb_trace.sv`, run via `sim\run_m4_trace.bat`) that walks one line through
+the entire lifecycle — E, silent E→M, M→S flush, `BusUpgr`, a second flush, and
+a dirty eviction `BusWB` — exercising every bus command; the run also writes
+`trace.vcd`.
+
+**FPGA PPA.** The coherence unit — the four L1 caches plus the snoop bus, with
+the next memory level left at the boundary (`rtl/coherence_unit.sv`) — was
+synthesized out-of-context for the ZCU104 (Zynq UltraScale+ **xczu7ev**) via
+`sim\synth_ooc.tcl`. Reports are in [`reports_synth/`](reports_synth).
+
+| Metric (4 cores) | Value |
+|------------------|-------|
+| LUTs             | 3,430 (≈ 750–785 per cache, 365 for the bus) |
+| Flip-flops       | 4,392 |
+| BRAM / DSP       | 0 / 0 |
+| Timing           | meets a 200 MHz (5.0 ns) constraint, WNS **+2.78 ns**, 0 failing endpoints |
+| On-chip power    | 0.642 W (0.05 dynamic + 0.59 static) |
+
+The tag/state/data arrays (16 sets × 4 cores) map to registers rather than
+block RAM, so the unit is FF-heavy but BRAM-free and compact. Timing is the
+out-of-context estimate (the OOC clock network is not modelled); a full
+in-context implementation would refine it. Run all functional tests with
+`sim\run_m2.bat` and `sim\run_m3.bat`.
 
 ## Repository layout
 

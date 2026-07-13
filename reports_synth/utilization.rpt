@@ -1,0 +1,33 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2025.1 (win64) Build 6140274 Thu May 22 00:12:29 MDT 2025
+| Date         : Mon Jul 13 18:27:49 2026
+| Host         : Krishna_NITjsr running 64-bit major release  (build 9200)
+| Command      : report_utilization -hierarchical -file {D:/Verilog Projects/mesi_coherence_unit/reports_synth/utilization.rpt}
+| Design       : coherence_unit
+| Device       : xczu7ev-ffvc1156-2-e
+| Speed File   : -2
+| Design State : Synthesized
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++---------------------+--------------------------+------------+------------+---------+------+------+--------+--------+------+------------+
+|       Instance      |          Module          | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | URAM | DSP Blocks |
++---------------------+--------------------------+------------+------------+---------+------+------+--------+--------+------+------------+
+| coherence_unit      |                    (top) |       3430 |       3430 |       0 |    0 | 4392 |      0 |      0 |    0 |          0 |
+|   g_core[0].u_cache |                 l1_cache |        748 |        748 |       0 |    0 | 1064 |      0 |      0 |    0 |          0 |
+|   g_core[1].u_cache | l1_cache__parameterized0 |        749 |        749 |       0 |    0 | 1065 |      0 |      0 |    0 |          0 |
+|   g_core[2].u_cache | l1_cache__parameterized1 |        784 |        784 |       0 |    0 | 1064 |      0 |      0 |    0 |          0 |
+|   g_core[3].u_cache | l1_cache__parameterized2 |        784 |        784 |       0 |    0 | 1064 |      0 |      0 |    0 |          0 |
+|   u_bus             |                snoop_bus |        365 |        365 |       0 |    0 |  135 |      0 |      0 |    0 |          0 |
++---------------------+--------------------------+------------+------------+---------+------+------+--------+--------+------+------------+
+
+

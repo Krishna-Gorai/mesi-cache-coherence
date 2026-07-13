@@ -1,0 +1,323 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version      : Vivado v.2025.1 (win64) Build 6140274 Thu May 22 00:12:29 MDT 2025
+| Date              : Mon Jul 13 18:28:56 2026
+| Host              : Krishna_NITjsr running 64-bit major release  (build 9200)
+| Command           : report_timing -sort_by group -max_paths 5 -path_type full -file {D:/Verilog Projects/mesi_coherence_unit/reports_synth/timing_paths.rpt}
+| Design            : coherence_unit
+| Device            : xczu7ev-ffvc1156
+| Speed File        : -2  PRODUCTION 1.30 05-15-2022
+| Design State      : Synthesized
+| Temperature Grade : E
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack (MET) :             2.779ns  (required time - arrival time)
+  Source:                 g_core[0].u_cache/tag_q_reg[11][5]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            g_core[0].u_cache/data_q_reg[0][0]/CE
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (clk rise@5.000ns - clk rise@0.000ns)
+  Data Path Delay:        2.116ns  (logic 0.779ns (36.815%)  route 1.337ns (63.185%))
+  Logic Levels:           8  (CARRY8=2 LUT6=6)
+  Clock Path Skew:        -0.009ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.021ns = ( 5.021 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r  
+                         propagated clock network latency
+                                                      0.030     0.030    
+                         FDRE                         0.000     0.030 r  g_core[0].u_cache/tag_q_reg[11][5]/C
+                         FDRE (Prop_FDRE_C_Q)         0.077     0.107 f  g_core[0].u_cache/tag_q_reg[11][5]/Q
+                         net (fo=2, unplaced)         0.154     0.261    g_core[0].u_cache/tag_q_reg_n_0_[11][5]
+                         LUT6 (Prop_LUT6_I0_O)        0.150     0.411 f  g_core[0].u_cache/FSM_onehot_state[4]_i_233/O
+                         net (fo=1, unplaced)         0.141     0.552    g_core[0].u_cache/FSM_onehot_state[4]_i_233_n_0
+                         LUT6 (Prop_LUT6_I0_O)        0.100     0.652 r  g_core[0].u_cache/FSM_onehot_state[4]_i_107/O
+                         net (fo=1, unplaced)         0.140     0.792    g_core[0].u_cache/FSM_onehot_state[4]_i_107_n_0
+                         LUT6 (Prop_LUT6_I0_O)        0.089     0.881 r  g_core[0].u_cache/FSM_onehot_state[4]_i_52/O
+                         net (fo=1, unplaced)         0.023     0.904    g_core[0].u_cache/FSM_onehot_state[4]_i_52_n_0
+                         CARRY8 (Prop_CARRY8_S[1]_CO[7])
+                                                      0.197     1.101 f  g_core[0].u_cache/FSM_onehot_state_reg[4]_i_29/CO[7]
+                         net (fo=1, unplaced)         0.005     1.106    g_core[0].u_cache/FSM_onehot_state_reg[4]_i_29_n_0
+                         CARRY8 (Prop_CARRY8_CI_CO[0])
+                                                      0.052     1.158 f  g_core[0].u_cache/FSM_onehot_state_reg[4]_i_16/CO[0]
+                         net (fo=3, unplaced)         0.192     1.350    g_core[0].u_cache/CO[0]
+                         LUT6 (Prop_LUT6_I3_O)        0.038     1.388 r  g_core[0].u_cache/cur_shared_i_4/O
+                         net (fo=21, unplaced)        0.236     1.624    g_core[0].u_cache/FSM_onehot_state_reg[0]
+                         LUT6 (Prop_LUT6_I1_O)        0.038     1.662 r  g_core[0].u_cache/state_q[1][1]_i_5/O
+                         net (fo=32, unplaced)        0.246     1.908    g_core[0].u_cache/state_q[1][1]_i_5_n_0
+                         LUT6 (Prop_LUT6_I1_O)        0.038     1.946 r  g_core[0].u_cache/data_q[0][31]_i_1/O
+                         net (fo=32, unplaced)        0.200     2.146    g_core[0].u_cache/data_q[0][31]_i_1_n_0
+                         FDRE                                         r  g_core[0].u_cache/data_q_reg[0][0]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)        5.000     5.000 r  
+                         propagated clock network latency
+                                                      0.021     5.021    
+                         clock pessimism              0.000     5.021    
+                         clock uncertainty           -0.035     4.986    
+                         FDRE (Setup_FDRE_C_CE)      -0.061     4.925    g_core[0].u_cache/data_q_reg[0][0]
+  -------------------------------------------------------------------
+                         required time                          4.925    
+                         arrival time                          -2.146    
+  -------------------------------------------------------------------
+                         slack                                  2.779    
+
+Slack (MET) :             2.779ns  (required time - arrival time)
+  Source:                 g_core[0].u_cache/tag_q_reg[11][5]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            g_core[0].u_cache/data_q_reg[0][10]/CE
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (clk rise@5.000ns - clk rise@0.000ns)
+  Data Path Delay:        2.116ns  (logic 0.779ns (36.815%)  route 1.337ns (63.185%))
+  Logic Levels:           8  (CARRY8=2 LUT6=6)
+  Clock Path Skew:        -0.009ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.021ns = ( 5.021 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r  
+                         propagated clock network latency
+                                                      0.030     0.030    
+                         FDRE                         0.000     0.030 r  g_core[0].u_cache/tag_q_reg[11][5]/C
+                         FDRE (Prop_FDRE_C_Q)         0.077     0.107 f  g_core[0].u_cache/tag_q_reg[11][5]/Q
+                         net (fo=2, unplaced)         0.154     0.261    g_core[0].u_cache/tag_q_reg_n_0_[11][5]
+                         LUT6 (Prop_LUT6_I0_O)        0.150     0.411 f  g_core[0].u_cache/FSM_onehot_state[4]_i_233/O
+                         net (fo=1, unplaced)         0.141     0.552    g_core[0].u_cache/FSM_onehot_state[4]_i_233_n_0
+                         LUT6 (Prop_LUT6_I0_O)        0.100     0.652 r  g_core[0].u_cache/FSM_onehot_state[4]_i_107/O
+                         net (fo=1, unplaced)         0.140     0.792    g_core[0].u_cache/FSM_onehot_state[4]_i_107_n_0
+                         LUT6 (Prop_LUT6_I0_O)        0.089     0.881 r  g_core[0].u_cache/FSM_onehot_state[4]_i_52/O
+                         net (fo=1, unplaced)         0.023     0.904    g_core[0].u_cache/FSM_onehot_state[4]_i_52_n_0
+                         CARRY8 (Prop_CARRY8_S[1]_CO[7])
+                                                      0.197     1.101 f  g_core[0].u_cache/FSM_onehot_state_reg[4]_i_29/CO[7]
+                         net (fo=1, unplaced)         0.005     1.106    g_core[0].u_cache/FSM_onehot_state_reg[4]_i_29_n_0
+                         CARRY8 (Prop_CARRY8_CI_CO[0])
+                                                      0.052     1.158 f  g_core[0].u_cache/FSM_onehot_state_reg[4]_i_16/CO[0]
+                         net (fo=3, unplaced)         0.192     1.350    g_core[0].u_cache/CO[0]
+                         LUT6 (Prop_LUT6_I3_O)        0.038     1.388 r  g_core[0].u_cache/cur_shared_i_4/O
+                         net (fo=21, unplaced)        0.236     1.624    g_core[0].u_cache/FSM_onehot_state_reg[0]
+                         LUT6 (Prop_LUT6_I1_O)        0.038     1.662 r  g_core[0].u_cache/state_q[1][1]_i_5/O
+                         net (fo=32, unplaced)        0.246     1.908    g_core[0].u_cache/state_q[1][1]_i_5_n_0
+                         LUT6 (Prop_LUT6_I1_O)        0.038     1.946 r  g_core[0].u_cache/data_q[0][31]_i_1/O
+                         net (fo=32, unplaced)        0.200     2.146    g_core[0].u_cache/data_q[0][31]_i_1_n_0
+                         FDRE                                         r  g_core[0].u_cache/data_q_reg[0][10]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)        5.000     5.000 r  
+                         propagated clock network latency
+                                                      0.021     5.021    
+                         clock pessimism              0.000     5.021    
+                         clock uncertainty           -0.035     4.986    
+                         FDRE (Setup_FDRE_C_CE)      -0.061     4.925    g_core[0].u_cache/data_q_reg[0][10]
+  -------------------------------------------------------------------
+                         required time                          4.925    
+                         arrival time                          -2.146    
+  -------------------------------------------------------------------
+                         slack                                  2.779    
+
+Slack (MET) :             2.779ns  (required time - arrival time)
+  Source:                 g_core[0].u_cache/tag_q_reg[11][5]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            g_core[0].u_cache/data_q_reg[0][11]/CE
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (clk rise@5.000ns - clk rise@0.000ns)
+  Data Path Delay:        2.116ns  (logic 0.779ns (36.815%)  route 1.337ns (63.185%))
+  Logic Levels:           8  (CARRY8=2 LUT6=6)
+  Clock Path Skew:        -0.009ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.021ns = ( 5.021 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r  
+                         propagated clock network latency
+                                                      0.030     0.030    
+                         FDRE                         0.000     0.030 r  g_core[0].u_cache/tag_q_reg[11][5]/C
+                         FDRE (Prop_FDRE_C_Q)         0.077     0.107 f  g_core[0].u_cache/tag_q_reg[11][5]/Q
+                         net (fo=2, unplaced)         0.154     0.261    g_core[0].u_cache/tag_q_reg_n_0_[11][5]
+                         LUT6 (Prop_LUT6_I0_O)        0.150     0.411 f  g_core[0].u_cache/FSM_onehot_state[4]_i_233/O
+                         net (fo=1, unplaced)         0.141     0.552    g_core[0].u_cache/FSM_onehot_state[4]_i_233_n_0
+                         LUT6 (Prop_LUT6_I0_O)        0.100     0.652 r  g_core[0].u_cache/FSM_onehot_state[4]_i_107/O
+                         net (fo=1, unplaced)         0.140     0.792    g_core[0].u_cache/FSM_onehot_state[4]_i_107_n_0
+                         LUT6 (Prop_LUT6_I0_O)        0.089     0.881 r  g_core[0].u_cache/FSM_onehot_state[4]_i_52/O
+                         net (fo=1, unplaced)         0.023     0.904    g_core[0].u_cache/FSM_onehot_state[4]_i_52_n_0
+                         CARRY8 (Prop_CARRY8_S[1]_CO[7])
+                                                      0.197     1.101 f  g_core[0].u_cache/FSM_onehot_state_reg[4]_i_29/CO[7]
+                         net (fo=1, unplaced)         0.005     1.106    g_core[0].u_cache/FSM_onehot_state_reg[4]_i_29_n_0
+                         CARRY8 (Prop_CARRY8_CI_CO[0])
+                                                      0.052     1.158 f  g_core[0].u_cache/FSM_onehot_state_reg[4]_i_16/CO[0]
+                         net (fo=3, unplaced)         0.192     1.350    g_core[0].u_cache/CO[0]
+                         LUT6 (Prop_LUT6_I3_O)        0.038     1.388 r  g_core[0].u_cache/cur_shared_i_4/O
+                         net (fo=21, unplaced)        0.236     1.624    g_core[0].u_cache/FSM_onehot_state_reg[0]
+                         LUT6 (Prop_LUT6_I1_O)        0.038     1.662 r  g_core[0].u_cache/state_q[1][1]_i_5/O
+                         net (fo=32, unplaced)        0.246     1.908    g_core[0].u_cache/state_q[1][1]_i_5_n_0
+                         LUT6 (Prop_LUT6_I1_O)        0.038     1.946 r  g_core[0].u_cache/data_q[0][31]_i_1/O
+                         net (fo=32, unplaced)        0.200     2.146    g_core[0].u_cache/data_q[0][31]_i_1_n_0
+                         FDRE                                         r  g_core[0].u_cache/data_q_reg[0][11]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)        5.000     5.000 r  
+                         propagated clock network latency
+                                                      0.021     5.021    
+                         clock pessimism              0.000     5.021    
+                         clock uncertainty           -0.035     4.986    
+                         FDRE (Setup_FDRE_C_CE)      -0.061     4.925    g_core[0].u_cache/data_q_reg[0][11]
+  -------------------------------------------------------------------
+                         required time                          4.925    
+                         arrival time                          -2.146    
+  -------------------------------------------------------------------
+                         slack                                  2.779    
+
+Slack (MET) :             2.779ns  (required time - arrival time)
+  Source:                 g_core[0].u_cache/tag_q_reg[11][5]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            g_core[0].u_cache/data_q_reg[0][12]/CE
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (clk rise@5.000ns - clk rise@0.000ns)
+  Data Path Delay:        2.116ns  (logic 0.779ns (36.815%)  route 1.337ns (63.185%))
+  Logic Levels:           8  (CARRY8=2 LUT6=6)
+  Clock Path Skew:        -0.009ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.021ns = ( 5.021 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r  
+                         propagated clock network latency
+                                                      0.030     0.030    
+                         FDRE                         0.000     0.030 r  g_core[0].u_cache/tag_q_reg[11][5]/C
+                         FDRE (Prop_FDRE_C_Q)         0.077     0.107 f  g_core[0].u_cache/tag_q_reg[11][5]/Q
+                         net (fo=2, unplaced)         0.154     0.261    g_core[0].u_cache/tag_q_reg_n_0_[11][5]
+                         LUT6 (Prop_LUT6_I0_O)        0.150     0.411 f  g_core[0].u_cache/FSM_onehot_state[4]_i_233/O
+                         net (fo=1, unplaced)         0.141     0.552    g_core[0].u_cache/FSM_onehot_state[4]_i_233_n_0
+                         LUT6 (Prop_LUT6_I0_O)        0.100     0.652 r  g_core[0].u_cache/FSM_onehot_state[4]_i_107/O
+                         net (fo=1, unplaced)         0.140     0.792    g_core[0].u_cache/FSM_onehot_state[4]_i_107_n_0
+                         LUT6 (Prop_LUT6_I0_O)        0.089     0.881 r  g_core[0].u_cache/FSM_onehot_state[4]_i_52/O
+                         net (fo=1, unplaced)         0.023     0.904    g_core[0].u_cache/FSM_onehot_state[4]_i_52_n_0
+                         CARRY8 (Prop_CARRY8_S[1]_CO[7])
+                                                      0.197     1.101 f  g_core[0].u_cache/FSM_onehot_state_reg[4]_i_29/CO[7]
+                         net (fo=1, unplaced)         0.005     1.106    g_core[0].u_cache/FSM_onehot_state_reg[4]_i_29_n_0
+                         CARRY8 (Prop_CARRY8_CI_CO[0])
+                                                      0.052     1.158 f  g_core[0].u_cache/FSM_onehot_state_reg[4]_i_16/CO[0]
+                         net (fo=3, unplaced)         0.192     1.350    g_core[0].u_cache/CO[0]
+                         LUT6 (Prop_LUT6_I3_O)        0.038     1.388 r  g_core[0].u_cache/cur_shared_i_4/O
+                         net (fo=21, unplaced)        0.236     1.624    g_core[0].u_cache/FSM_onehot_state_reg[0]
+                         LUT6 (Prop_LUT6_I1_O)        0.038     1.662 r  g_core[0].u_cache/state_q[1][1]_i_5/O
+                         net (fo=32, unplaced)        0.246     1.908    g_core[0].u_cache/state_q[1][1]_i_5_n_0
+                         LUT6 (Prop_LUT6_I1_O)        0.038     1.946 r  g_core[0].u_cache/data_q[0][31]_i_1/O
+                         net (fo=32, unplaced)        0.200     2.146    g_core[0].u_cache/data_q[0][31]_i_1_n_0
+                         FDRE                                         r  g_core[0].u_cache/data_q_reg[0][12]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)        5.000     5.000 r  
+                         propagated clock network latency
+                                                      0.021     5.021    
+                         clock pessimism              0.000     5.021    
+                         clock uncertainty           -0.035     4.986    
+                         FDRE (Setup_FDRE_C_CE)      -0.061     4.925    g_core[0].u_cache/data_q_reg[0][12]
+  -------------------------------------------------------------------
+                         required time                          4.925    
+                         arrival time                          -2.146    
+  -------------------------------------------------------------------
+                         slack                                  2.779    
+
+Slack (MET) :             2.779ns  (required time - arrival time)
+  Source:                 g_core[0].u_cache/tag_q_reg[11][5]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Destination:            g_core[0].u_cache/data_q_reg[0][13]/CE
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@2.500ns period=5.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            5.000ns  (clk rise@5.000ns - clk rise@0.000ns)
+  Data Path Delay:        2.116ns  (logic 0.779ns (36.815%)  route 1.337ns (63.185%))
+  Logic Levels:           8  (CARRY8=2 LUT6=6)
+  Clock Path Skew:        -0.009ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.021ns = ( 5.021 - 5.000 ) 
+    Source Clock Delay      (SCD):    0.030ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r  
+                         propagated clock network latency
+                                                      0.030     0.030    
+                         FDRE                         0.000     0.030 r  g_core[0].u_cache/tag_q_reg[11][5]/C
+                         FDRE (Prop_FDRE_C_Q)         0.077     0.107 f  g_core[0].u_cache/tag_q_reg[11][5]/Q
+                         net (fo=2, unplaced)         0.154     0.261    g_core[0].u_cache/tag_q_reg_n_0_[11][5]
+                         LUT6 (Prop_LUT6_I0_O)        0.150     0.411 f  g_core[0].u_cache/FSM_onehot_state[4]_i_233/O
+                         net (fo=1, unplaced)         0.141     0.552    g_core[0].u_cache/FSM_onehot_state[4]_i_233_n_0
+                         LUT6 (Prop_LUT6_I0_O)        0.100     0.652 r  g_core[0].u_cache/FSM_onehot_state[4]_i_107/O
+                         net (fo=1, unplaced)         0.140     0.792    g_core[0].u_cache/FSM_onehot_state[4]_i_107_n_0
+                         LUT6 (Prop_LUT6_I0_O)        0.089     0.881 r  g_core[0].u_cache/FSM_onehot_state[4]_i_52/O
+                         net (fo=1, unplaced)         0.023     0.904    g_core[0].u_cache/FSM_onehot_state[4]_i_52_n_0
+                         CARRY8 (Prop_CARRY8_S[1]_CO[7])
+                                                      0.197     1.101 f  g_core[0].u_cache/FSM_onehot_state_reg[4]_i_29/CO[7]
+                         net (fo=1, unplaced)         0.005     1.106    g_core[0].u_cache/FSM_onehot_state_reg[4]_i_29_n_0
+                         CARRY8 (Prop_CARRY8_CI_CO[0])
+                                                      0.052     1.158 f  g_core[0].u_cache/FSM_onehot_state_reg[4]_i_16/CO[0]
+                         net (fo=3, unplaced)         0.192     1.350    g_core[0].u_cache/CO[0]
+                         LUT6 (Prop_LUT6_I3_O)        0.038     1.388 r  g_core[0].u_cache/cur_shared_i_4/O
+                         net (fo=21, unplaced)        0.236     1.624    g_core[0].u_cache/FSM_onehot_state_reg[0]
+                         LUT6 (Prop_LUT6_I1_O)        0.038     1.662 r  g_core[0].u_cache/state_q[1][1]_i_5/O
+                         net (fo=32, unplaced)        0.246     1.908    g_core[0].u_cache/state_q[1][1]_i_5_n_0
+                         LUT6 (Prop_LUT6_I1_O)        0.038     1.946 r  g_core[0].u_cache/data_q[0][31]_i_1/O
+                         net (fo=32, unplaced)        0.200     2.146    g_core[0].u_cache/data_q[0][31]_i_1_n_0
+                         FDRE                                         r  g_core[0].u_cache/data_q_reg[0][13]/CE
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)        5.000     5.000 r  
+                         propagated clock network latency
+                                                      0.021     5.021    
+                         clock pessimism              0.000     5.021    
+                         clock uncertainty           -0.035     4.986    
+                         FDRE (Setup_FDRE_C_CE)      -0.061     4.925    g_core[0].u_cache/data_q_reg[0][13]
+  -------------------------------------------------------------------
+                         required time                          4.925    
+                         arrival time                          -2.146    
+  -------------------------------------------------------------------
+                         slack                                  2.779    
+
+
+
+
